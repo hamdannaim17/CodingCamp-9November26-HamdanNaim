@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense & Budget Visualizer</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-title">
+                <h1><i class="fa-solid fa-wallet"></i> Budget Visualizer</h1>
+                <p>Kelola pengeluaran harian Anda dengan mudah</p>
+            </div>
+            <button id="theme-toggle-btn" class="icon-btn" title="Ganti Tema">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </header>
+
+        <!-- Balance Card -->
+        <section class="balance-card">
+            <h2>Total Saldo / Pengeluaran</h2>
+            <div class="balance-amount" id="total-balance">Rp 0</div>
+        </section>
+
+        <!-- Main Content Grid -->
+        <div class="main-grid">
+            <!-- Left Column: Input Form & Chart -->
+            <div class="left-column">
+                <!-- Input Form Card -->
+                <div class="card">
+                    <h3><i class="fa-solid fa-plus-circle"></i> Tambah Transaksi</h3>
+                    <form id="transaction-form">
+                        <div class="form-group">
+                            <label for="item-name">Nama Item</label>
+                            <input type="text" id="item-name" placeholder="Contoh: Makan Siang, Bensin..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-amount">Jumlah (Rp)</label>
+                            <input type="number" id="item-amount" placeholder="0" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-category">Kategori</label>
+                            <div class="category-input-wrapper">
+                                <select id="item-category" required>
+                                    <option value="" disabled selected>Pilih Kategori</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Fun">Fun</option>
+                                </select>
+                                <button type="button" id="add-category-btn" class="btn-secondary" title="Tambah Kategori Kustom">
+                                    <i class="fa-solid fa-plus"></i> Kustom
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Tambah Transaksi</button>
+                    </form>
+                </div>
+
+                <!-- Visual Chart Card -->
+                <div class="card">
+                    <h3><i class="fa-solid fa-chart-pie"></i> Grafik Pengeluaran</h3>
+                    <div class="chart-container">
+                        <canvas id="spending-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <!-- Transaction List Card -->
+                <div class="card">
+                    <div class="card-header-flex">
+                        <h3><i class="fa-solid fa-list"></i> Riwayat Transaksi</h3>
+                        <div class="sort-controls">
+                            <select id="sort-select" title="Urutkan Transaksi">
+                                <option value="default">Urutkan...</option>
+                                <option value="amount-desc">Jumlah (Tertinggi)</option>
+                                <option value="amount-asc">Jumlah (Terendah)</option>
+                                <option value="category">Kategori</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Spending Limit Alert Filter -->
+                    <div class="limit-setting">
+                        <label for="spending-limit"><i class="fa-solid fa-triangle-exclamation"></i> Batas Pengeluaran:</label>
+                        <input type="number" id="spending-limit" placeholder="Atur batas (Rp)">
+                    </div>
+                    <div id="limit-alert" class="alert hidden">
+                        <i class="fa-solid fa-circle-exclamation"></i> Peringatan: Pengeluaran melewati batas yang ditentukan!
+                    </div>
+
+                    <div class="search-filter">
+                        <input type="text" id="search-input" placeholder="Cari transaksi...">
+                    </div>
+
+                    <div class="transaction-list-container">
+                        <ul id="transaction-list">
+                            <!-- Items populated dynamically via JS -->
+                        </ul>
+                        <div id="empty-state" class="empty-state">
+                            <i class="fa-solid fa-receipt"></i>
+                            <p>Belum ada transaksi yang ditambahkan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Summary Card -->
+                <div class="card">
+                    <h3><i class="fa-solid fa-calendar-days"></i> Ringkasan Bulan Ini</h3>
+                    <div id="monthly-summary" class="monthly-summary-content">
+                        <p>Total Bulan Ini: <span id="monthly-total">Rp 0</span></p>
+                        <p>Jumlah Transaksi: <span id="monthly-count">0</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Category Modal -->
+    <div id="category-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Tambah Kategori Kustom</h3>
+            <input type="text" id="custom-category-input" placeholder="Nama Kategori Baru">
+            <div class="modal-actions">
+                <button id="save-category-btn" class="btn-primary">Simpan</button>
+                <button id="close-modal-btn" class="btn-secondary">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
